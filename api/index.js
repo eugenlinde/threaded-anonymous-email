@@ -1,7 +1,7 @@
-import { parse } from "../services/parsing.js";
-import { hasValidReplyFields, hasValidHeader } from "../services/validation.js";
-import { getRecord } from "../services/database.js";
-import { send } from "../services/email.js";
+import { parse } from '../services/parsing.js';
+import { hasValidReplyFields, hasValidHeader } from '../services/validation.js';
+import { getRecord } from '../services/database.js';
+import { send } from '../services/email.js';
 
 export default async function handler(req, res) {
     try {

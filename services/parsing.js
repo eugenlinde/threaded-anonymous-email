@@ -1,6 +1,6 @@
-import multiparty from "multiparty";
-import { simpleParser } from "mailparser";
-import { findUUIDs } from "../utils/general.js";
+import multiparty from 'multiparty';
+import { simpleParser } from 'mailparser';
+import { findUUIDs } from '../utils/general.js';
 
 export const parse = async (req) => {
     const form = new multiparty.Form();
@@ -8,7 +8,7 @@ export const parse = async (req) => {
     try {
         const data = await new Promise((resolve, reject) => {
             form.parse(req, function (err, fields, files) {
-                if (err) reject({err});
+                if (err) reject({ err });
                 resolve({ fields, files });
             });
         });
@@ -22,15 +22,15 @@ export const parse = async (req) => {
                 html: parsed.html,
                 text: parsed.text,
                 textAsHtml: parsed.textAsHtml,
-                threadRef: findUUIDs(parsed.text)
+                threadRef: findUUIDs(parsed.text),
             };
         } else {
             console.error('Email body is not parsed', data);
         }
     } catch (e) {
-        console.error("error: ", e);
+        console.error('error: ', e);
         throw e;
     }
 
     throw new Error('Unable to read email body.');
-}
+};

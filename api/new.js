@@ -1,7 +1,11 @@
-import {hasValidAPIKey, hasValidHeader, hasValidNewRecordFields} from "../services/validation.js";
-import { createRecord } from "../services/database.js";
-import { send } from "../services/email.js";
-import { addUUIDToHtml, addUUIDToText } from "../utils/general.js";
+import {
+    hasValidAPIKey,
+    hasValidHeader,
+    hasValidNewRecordFields,
+} from '../services/validation.js';
+import { createRecord } from '../services/database.js';
+import { send } from '../services/email.js';
+import { addUUIDToHtml, addUUIDToText } from '../utils/general.js';
 
 export default async function handler(req, res) {
     try {
@@ -9,19 +13,28 @@ export default async function handler(req, res) {
         hasValidHeader(req);
         const requestObject = JSON.parse(req.body);
         hasValidNewRecordFields(requestObject);
-        const newRecord = await createRecord(requestObject[process.env.CLIENT_ONE_COLUMN], requestObject[process.env.CLIENT_TWO_COLUMN]);
+        const newRecord = await createRecord(
+            requestObject[process.env.CLIENT_ONE_COLUMN],
+            requestObject[process.env.CLIENT_TWO_COLUMN],
+        );
 
         if (requestObject.text) {
-            requestObject.text = addUUIDToText(requestObject.text, newRecord[0]?.id);
+            requestObject.text = addUUIDToText(
+                requestObject.text,
+                newRecord[0]?.id,
+            );
         }
 
         if (requestObject.textAsHtml) {
-            requestObject.textAsHtml = addUUIDToHtml(requestObject.textAsHtml, newRecord[0]?.id);
+            requestObject.textAsHtml = addUUIDToHtml(
+                requestObject.textAsHtml,
+                newRecord[0]?.id,
+            );
         }
 
         await send(requestObject, newRecord);
 
-        return res.status(200).json({ id: newRecord[0]?.id })
+        return res.status(200).json({ id: newRecord[0]?.id });
     } catch (e) {
         if (!e.code) e.code = 500;
 

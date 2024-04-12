@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import nodemailer from "nodemailer";
+import nodemailer from 'nodemailer';
 
 export const send = async (data, record) => {
     const clientOne = record[0]?.[process.env.CLIENT_ONE_TABLE];
@@ -25,17 +25,21 @@ export const send = async (data, record) => {
 };
 
 const handleNodeMailer = async (data) => {
-    const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        secure: true,
-        auth: {
-            user: process.env.SMTP_USERNAME,
-            pass: process.env.SMTP_PASSWORD,
-        },
-    });
-
     try {
+        const transporter = nodemailer.createTransport({
+            host: process.env.SMTP_HOST,
+            port: parseInt(process.env.SMTP_PORT),
+            secure: false,
+            auth: {
+                user: process.env.SMTP_USERNAME,
+                pass: process.env.SMTP_PASSWORD,
+            },
+        });
+
+        transporter.verify(function (error) {
+            if (error) throw new Error(error);
+        });
+
         return await transporter.sendMail({
             from: process.env.FROM_ADDRESS,
             to: data.to,
@@ -52,4 +56,4 @@ const handleNodeMailer = async (data) => {
 
         throw new Error('Failed to send email!');
     }
-}
+};

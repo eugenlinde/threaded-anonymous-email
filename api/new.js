@@ -5,7 +5,7 @@ import {
 } from '../services/validation.js';
 import { createRecord } from '../services/database.js';
 import { send } from '../services/email.js';
-import { addUUIDToHtml, addUUIDToText } from '../utils/general.js';
+import { aadFooterToHTML, addUUIDToText } from '../utils/general.js';
 
 export default async function handler(req, res) {
     try {
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
         }
 
         if (requestObject.textAsHtml) {
-            requestObject.textAsHtml = addUUIDToHtml(
+            requestObject.textAsHtml = aadFooterToHTML(
                 requestObject.textAsHtml,
                 newRecord[0]?.id,
             );

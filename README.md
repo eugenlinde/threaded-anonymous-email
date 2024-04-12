@@ -16,11 +16,11 @@ Make sure that the Vercel server IS NOT Vercel authenticated, otherwise sendgrid
 
 ### new email
 
-Client 1 email request -> API -> Sendgrid -> Client 2 (from address is shown as your domain address)
+Client 1 email request -> API -> NodeMailer -> Client 2 (from address is shown as your domain address)
 
 ### reply email
 
-Client 2 email request -> Sendgrid -> API -> Sendgrid -> Client 1 (from address is shown as your domain address)
+Client 2 email request -> Sendgrid -> API -> NodeMailer -> Client 1 (from address is shown as your domain address)
 
 ### API endpoints
 
@@ -30,7 +30,6 @@ Client 2 email request -> Sendgrid -> API -> Sendgrid -> Client 1 (from address 
 ### 3rd party services used:
 
 -   Vercel - serverless API
--   Sendgrid
-    -   Mail - simple package to send out mails
-    -   Parse Webhook - redirect and parse replies to the API
+-   NodeMailer - simple package to send out emails
+-   Sendgrid - Parse Webhook - redirect and parse replies to the API
 -   Supabase - to keep track of threads and both clients

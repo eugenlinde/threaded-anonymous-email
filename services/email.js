@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import mail from '@sendgrid/mail';
+import nodemailer from "nodemailer";
 
 export const send = async (data, record) => {
     const clientOne = record[0]?.[process.env.CLIENT_ONE_TABLE];
@@ -8,10 +8,10 @@ export const send = async (data, record) => {
 
     switch (data.from) {
         case clientOne.email:
-            await handleSendgrid({ to: clientTwo.email, ...data });
+            await handleNodeMailer({ to: clientTwo.email, ...data });
             break;
         case clientTwo.email:
-            await handleSendgrid({ to: clientOne.email, ...data });
+            await handleNodeMailer({ to: clientOne.email, ...data });
             break;
         default:
             console.error('No matching emails: ', {
@@ -24,22 +24,25 @@ export const send = async (data, record) => {
     }
 };
 
-const handleSendgrid = async (data) => {
-    if (!process.env.SENDGRID_API_KEY || !process.env.FROM_ADDRESS) {
-        throw new Error('Missing email service variables!');
-    }
-
-    mail.setApiKey(process.env.SENDGRID_API_KEY);
-    const msg = {
-        from: process.env.FROM_ADDRESS,
-        to: data.to,
-        subject: data.subject,
-        text: data.text,
-        html: data.textAsHtml,
-    };
+const handleNodeMailer = async (data) => {
+    const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        secure: true,
+        auth: {
+            user: process.env.SMTP_USERNAME,
+            pass: process.env.SMTP_PASSWORD,
+        },
+    });
 
     try {
-        return await mail.send(msg);
+        return await transporter.sendMail({
+            from: process.env.FROM_ADDRESS,
+            to: data.to,
+            subject: data.subject,
+            text: data.text,
+            html: data.textAsHtml,
+        });
     } catch (error) {
         console.error('failed to send email: ', error);
 
@@ -49,4 +52,4 @@ const handleSendgrid = async (data) => {
 
         throw new Error('Failed to send email!');
     }
-};
+}

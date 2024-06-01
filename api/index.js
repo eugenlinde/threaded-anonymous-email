@@ -10,9 +10,11 @@ export default async function handler(req, res) {
         hasValidReplyFields(parsed);
         const record = await getRecord(parsed);
         await send(parsed, record);
+
         return res.status(200).json({ message: 'OK' });
     } catch (e) {
         if (!e.code) e.code = 500;
+
         return res.status(e.code).json({ message: e.message });
     }
 }

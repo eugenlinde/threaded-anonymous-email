@@ -6,8 +6,9 @@ import {
 import { createRecord } from '../services/database.js';
 import { send } from '../services/email.js';
 import { aadFooterToHTML, addUUIDToText } from '../utils/general.js';
+import { allowCors } from '../utils/cors.js';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
     try {
         hasValidAPIKey(req);
         hasValidHeader(req);
@@ -41,3 +42,5 @@ export default async function handler(req, res) {
         return res.status(e.code).json({ message: e.message });
     }
 }
+
+export default allowCors(handler)

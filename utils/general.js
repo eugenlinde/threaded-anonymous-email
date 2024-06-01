@@ -1,10 +1,10 @@
 import { EOL } from 'os';
 
 export const findUUIDs = (text) => {
-    const pattern = /Ticket\snumber:\s([\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12})/i;
+    const pattern = /[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}/i;
     const matches = text.match(pattern);
     if (matches) {
-        return matches[1];
+        return matches[0];
     }
     console.error('No thread ref found on text: ', text);
     throw new Error('No thread ref found!');
